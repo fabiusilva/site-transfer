@@ -8,58 +8,82 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
+    /* ═══════════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ═══════════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════════ */
     :root {
-      /* ── Lagoon Blues ── */
+      /* Brand palette */
       --lagoon-deep:    #1D4D68;
       --lagoon-mid:     #2A7097;
       --lagoon-soft:    #4A8FAE;
       --lagoon-pale:    #C2E2F0;
-      --lagoon-mist:    #EAF5FB;
-
-      /* ── Sand & Dune Tones ── */
       --sand:           #C4A97E;
       --sand-bright:    #D4BC94;
       --sand-light:     #EDE4D0;
-      --sand-pale:      #F7F0E4;
-
-      /* ── Neutrals ── */
-      --pearl:          #FAFAF8;
       --white:          #FFFFFF;
+      --text:           #0F2030;
+      --text-mid:       #2A4A5E;
+      --text-muted:     #4A6E80;
+      --radius:         16px;
 
-      /* ── Typography ── */
-      --text:           #1A3A50;
-      --text-mid:       #3A5F72;
-      --text-muted:     #5A7D8E;
+      /* Glass presets */
+      --glass-light:    rgba(255, 255, 255, 0.86);
+      --glass-warm:     rgba(255, 250, 242, 0.88);
+      --glass-lagoon:   rgba(232, 248, 255, 0.86);
+      --glass-dark:     rgba(8,  24,  42,  0.88);
+      --glass-darker:   rgba(4,  14,  26,  0.94);
+      --glass-nav:      rgba(8,  22,  38,  0.82);
+      --blur-md:        blur(18px);
+      --blur-lg:        blur(22px);
 
-      /* ── Utilities ── */
-      --border-blue:    rgba(74,143,174,0.18);
-      --border-sand:    rgba(196,169,126,0.28);
-      --shadow-soft:    rgba(29,77,104,0.08);
-      --radius:         14px;
+      /* Borders */
+      --border-light:   rgba(255, 255, 255, 0.55);
+      --border-sand:    rgba(196, 169, 126, 0.28);
+      --border-blue:    rgba(74,  143, 174, 0.18);
     }
 
+    /* ═══════════════════════════════════════════════
+       BODY — FIXED BACKGROUND (THE WHOLE PAGE)
+    ═══════════════════════════════════════════════ */
     html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Inter', sans-serif;
       color: var(--text);
-      background: var(--pearl);
       overflow-x: hidden;
+      /* Fixed photo — the canvas beneath everything */
+      background-color: #1A4862;
+      background-image: url('https://raw.githubusercontent.com/fabiusilva/site-transfer/main/3840px-Parque_Nacional_dos_Len%C3%A7%C3%B3is_Maranhenses_photo_04.jpg');
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    /* iOS/Safari fallback — fixed attachment unsupported on mobile WebKit */
+    @media (max-width: 767px) {
+      body { background-attachment: scroll; }
     }
 
-    /* ─────────────────────────────────────────
-       TOPBAR
-    ───────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       TOPBAR — dark glass
+    ═══════════════════════════════════════════════ */
     .topbar {
-      background: var(--lagoon-deep);
+      background: var(--glass-dark);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 18px;
+      padding: 8px 20px;
       gap: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .topbar-text {
       color: rgba(255,255,255,0.65);
@@ -74,12 +98,8 @@
     }
     .topbar-text strong { color: rgba(255,255,255,0.9); font-weight: 600; }
 
-    .lang-switcher {
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      flex-shrink: 0;
-    }
+    /* Language switcher */
+    .lang-switcher { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
     .lang-btn {
       background: none;
       border: 1px solid transparent;
@@ -93,34 +113,30 @@
       transition: all 0.2s;
       font-family: 'Inter', sans-serif;
     }
-    .lang-btn:hover {
-      color: var(--white);
-      background: rgba(255,255,255,0.09);
-    }
+    .lang-btn:hover { color: var(--white); background: rgba(255,255,255,0.1); }
     .lang-btn.active {
       color: var(--sand-bright);
       border-color: rgba(196,169,126,0.38);
-      background: rgba(196,169,126,0.1);
+      background: rgba(196,169,126,0.12);
     }
-    .lang-sep {
-      color: rgba(255,255,255,0.18);
-      font-size: 0.58rem;
-      user-select: none;
-    }
+    .lang-sep { color: rgba(255,255,255,0.18); font-size: 0.6rem; user-select: none; }
 
-    /* ─────────────────────────────────────────
-       NAVBAR
-    ───────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       NAVBAR — dark glass, sticky
+    ═══════════════════════════════════════════════ */
     .navbar {
-      background: var(--lagoon-deep);
-      padding: 13px 18px;
+      background: var(--glass-nav);
+      backdrop-filter: var(--blur-lg);
+      -webkit-backdrop-filter: var(--blur-lg);
+      padding: 13px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 200;
-      box-shadow: 0 4px 20px rgba(29,77,104,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
     }
     .logo {
       display: flex;
@@ -129,8 +145,7 @@
       text-decoration: none;
     }
     .logo-mark {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       background: linear-gradient(135deg, var(--sand) 0%, var(--sand-bright) 100%);
       border-radius: 10px;
       display: flex;
@@ -171,72 +186,45 @@
     }
     .nav-cta:hover { background: var(--sand-bright); }
 
-    /* ─────────────────────────────────────────
-       HERO — parallax photo + overlay
-    ───────────────────────────────────────── */
+    /* ═══════════════════════════════════════════════
+       HERO — fully transparent, photo shows through
+    ═══════════════════════════════════════════════ */
     .hero {
       position: relative;
-      overflow: hidden;
-      padding: 60px 20px 86px;
+      padding: 80px 20px 110px;
       text-align: center;
-      /* Colour shown while the image loads */
-      background-color: #1A4862;
-      /* Parallax photo background */
-      background-image: url('https://raw.githubusercontent.com/fabiusilva/site-transfer/main/3840px-Parque_Nacional_dos_Len%C3%A7%C3%B3is_Maranhenses_photo_04.jpg');
-      background-attachment: fixed;   /* parallax */
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
+      background: transparent; /* body photo visible here */
     }
-    /* iOS / Android don't support background-attachment:fixed — graceful fallback */
-    @media (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1) {
-      .hero { background-attachment: scroll; }
-    }
-    /* Dark gradient overlay — guarantees white text contrast over any photo */
+    /* Primary dark veil for text contrast */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 0;
       background:
-        /* warm sand glow rising from the dunes at the bottom */
-        radial-gradient(ellipse 90% 45% at 50% 115%, rgba(180,140,80,0.22) 0%, transparent 60%),
-        /* primary dark veil — strong enough for WCAG AA contrast */
-        linear-gradient(
-          168deg,
-          rgba(10, 28, 46, 0.88) 0%,
-          rgba(15, 40, 62, 0.76) 40%,
-          rgba(10, 30, 52, 0.86) 100%
+        radial-gradient(ellipse 90% 50% at 50% 110%, rgba(180,140,80,0.2) 0%, transparent 60%),
+        linear-gradient(168deg,
+          rgba(6, 20, 36, 0.88) 0%,
+          rgba(10, 32, 54, 0.74) 45%,
+          rgba(6, 20, 36, 0.86) 100%
         );
       pointer-events: none;
     }
-    /* Edge vignette — deeper corners give a cinematic, immersive feel */
+    /* Edge vignette for cinematic depth */
     .hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      z-index: 1;
-      background:
-        radial-gradient(ellipse 130% 120% at 50% 50%,
-          transparent 45%,
-          rgba(5, 18, 32, 0.55) 100%);
+      z-index: 0;
+      background: radial-gradient(ellipse 140% 130% at 50% 50%,
+        transparent 40%, rgba(2, 10, 20, 0.62) 100%);
       pointer-events: none;
     }
-    .hero-wave {
-      position: absolute;
-      bottom: -1px;
-      left: 0; right: 0;
-      overflow: hidden;
-      line-height: 0;
-      pointer-events: none;
-      z-index: 2; /* above both overlay pseudo-elements */
-    }
-    .hero-wave svg { display: block; width: 100%; }
 
     .hero-inner {
       position: relative;
-      z-index: 3; /* above overlay (::before z-1) and vignette (::after z-1) */
-      max-width: 680px;
+      z-index: 2;
+      max-width: 700px;
       margin: 0 auto;
     }
     .hero-badge {
@@ -244,7 +232,7 @@
       align-items: center;
       gap: 7px;
       background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.22);
       color: rgba(255,255,255,0.92);
       font-size: 0.7rem;
       font-weight: 600;
@@ -253,80 +241,38 @@
       padding: 7px 16px;
       border-radius: 100px;
       margin-bottom: 28px;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       animation: fadeUp 0.6s ease 0.05s both;
     }
     .hero h1 {
       font-family: 'Playfair Display', serif;
       color: var(--white);
-      font-size: clamp(1.75rem, 6vw, 3rem);
+      font-size: clamp(1.8rem, 6vw, 3.1rem);
       font-weight: 800;
-      line-height: 1.22;
+      line-height: 1.2;
       margin-bottom: 22px;
+      text-shadow: 0 2px 28px rgba(0,0,0,0.55), 0 1px 5px rgba(0,0,0,0.35);
       animation: fadeUp 0.65s ease 0.15s both;
     }
-    .hero h1 em {
-      font-style: italic;
-      color: var(--sand-bright);
-    }
+    .hero h1 em { font-style: italic; color: var(--sand-bright); }
     .hero-sub {
-      color: rgba(255,255,255,0.76);
-      font-size: clamp(0.92rem, 2.5vw, 1.07rem);
+      color: rgba(255,255,255,0.82);
+      font-size: clamp(0.93rem, 2.5vw, 1.08rem);
       line-height: 1.75;
       font-weight: 300;
       max-width: 520px;
-      margin: 0 auto 42px;
+      margin: 0 auto 44px;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.45);
       animation: fadeUp 0.65s ease 0.25s both;
     }
     .hero-ctas {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      max-width: 430px;
-      margin: 0 auto 44px;
+      max-width: 440px;
+      margin: 0 auto 46px;
       animation: fadeUp 0.65s ease 0.35s both;
-    }
-    .btn-sand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      background: var(--sand);
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 17px 20px;
-      border-radius: var(--radius);
-      transition: all 0.25s ease;
-      box-shadow: 0 5px 24px rgba(196,169,126,0.32), 0 2px 8px rgba(0,0,0,0.12);
-    }
-    .btn-sand:hover {
-      background: var(--sand-bright);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(196,169,126,0.42);
-    }
-    .btn-glass {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      background: rgba(255,255,255,0.09);
-      color: var(--white);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 16px 20px;
-      border-radius: var(--radius);
-      border: 1.5px solid rgba(255,255,255,0.28);
-      transition: all 0.25s ease;
-      backdrop-filter: blur(4px);
-    }
-    .btn-glass:hover {
-      border-color: var(--sand-bright);
-      color: var(--sand-bright);
-      background: rgba(196,169,126,0.1);
-      transform: translateY(-2px);
     }
     .hero-trust {
       display: flex;
@@ -340,15 +286,105 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      color: rgba(255,255,255,0.62);
+      color: rgba(255,255,255,0.65);
       font-size: 0.75rem;
       font-weight: 500;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     .trust-pill .chk { color: var(--sand-bright); font-weight: 700; }
 
-    /* ─────────────────────────────────────────
+    /* ═══════════════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════════════ */
+    .btn-sand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: var(--sand);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 17px 22px;
+      border-radius: var(--radius);
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 28px rgba(196,169,126,0.35), 0 2px 10px rgba(0,0,0,0.18);
+    }
+    .btn-sand:hover {
+      background: var(--sand-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(196,169,126,0.48);
+    }
+    .btn-glass {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: rgba(255,255,255,0.12);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 16px 22px;
+      border-radius: var(--radius);
+      border: 1.5px solid rgba(255,255,255,0.32);
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .btn-glass:hover {
+      border-color: var(--sand-bright);
+      color: var(--sand-bright);
+      background: rgba(196,169,126,0.14);
+      transform: translateY(-2px);
+    }
+    /* Dark-context solid btn (for glass dark sections) */
+    .btn-sand-solid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: var(--sand);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 17px 22px;
+      border-radius: var(--radius);
+      transition: all 0.25s ease;
+      box-shadow: 0 5px 24px rgba(196,169,126,0.3);
+    }
+    .btn-sand-solid:hover {
+      background: var(--sand-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(196,169,126,0.44);
+    }
+    .btn-outline-white {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 16px 22px;
+      border-radius: var(--radius);
+      border: 1.5px solid rgba(255,255,255,0.28);
+      transition: all 0.25s ease;
+    }
+    .btn-outline-white:hover {
+      border-color: var(--sand-bright);
+      color: var(--sand-bright);
+      transform: translateY(-2px);
+      background: rgba(196,169,126,0.1);
+    }
+
+    /* ═══════════════════════════════════════════════
        SHARED SECTION STYLES
-    ───────────────────────────────────────── */
+    ═══════════════════════════════════════════════ */
     .section-inner {
       max-width: 960px;
       margin: 0 auto;
@@ -366,7 +402,7 @@
     .section-title {
       text-align: center;
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.48rem, 4.5vw, 2.2rem);
+      font-size: clamp(1.5rem, 4.5vw, 2.2rem);
       font-weight: 700;
       color: var(--text);
       line-height: 1.28;
@@ -388,25 +424,45 @@
       margin: 14px auto 0;
       opacity: 0.65;
     }
+    /* White section labels for dark-glass sections */
+    .label-light { color: var(--sand-bright); }
+    .title-light { color: var(--white); }
+    .desc-light { color: rgba(255,255,255,0.64); }
 
-    /* ─────────────────────────────────────────
-       BENEFITS  —  pearl white
-    ───────────────────────────────────────── */
-    .benefits { background: var(--pearl); }
+    /* ═══════════════════════════════════════════════
+       GLASS SECTIONS — slide over fixed photo
+    ═══════════════════════════════════════════════ */
+
+    /* ── BENEFITS — frosted white glass ── */
+    .benefits {
+      background: var(--glass-light);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border-top:    1px solid var(--border-light);
+      border-bottom: 1px solid rgba(255,255,255,0.35);
+    }
+    /* Fallback for browsers without backdrop-filter */
+    @supports not (backdrop-filter: blur(1px)) {
+      .benefits { background: rgba(255,255,255,0.97); }
+    }
+
     .benefits-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
     .benefit-card {
-      background: var(--white);
-      border: 1.5px solid var(--border-blue);
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,255,255,0.85);
       border-radius: var(--radius);
       padding: 26px 14px 22px;
       text-align: center;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 2px 16px rgba(29,77,104,0.07);
     }
     .benefit-card::after {
       content: '';
@@ -419,40 +475,34 @@
       transform-origin: left;
     }
     .benefit-card:hover {
-      border-color: var(--lagoon-pale);
-      box-shadow: 0 8px 28px var(--shadow-soft);
+      border-color: rgba(196,169,126,0.45);
+      box-shadow: 0 10px 32px rgba(29,77,104,0.12);
       transform: translateY(-4px);
     }
     .benefit-card:hover::after { transform: scaleX(1); }
-
     .benefit-icon-wrap {
-      width: 54px;
-      height: 54px;
-      background: linear-gradient(135deg, var(--lagoon-mist) 0%, var(--lagoon-pale) 100%);
+      width: 54px; height: 54px;
+      background: linear-gradient(135deg, rgba(200,230,245,0.8) 0%, rgba(194,226,240,0.8) 100%);
       border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       margin: 0 auto 13px;
       font-size: 1.5rem;
     }
-    .benefit-title {
-      font-weight: 700;
-      font-size: 0.86rem;
-      color: var(--text);
-      line-height: 1.35;
-      margin-bottom: 5px;
+    .benefit-title { font-weight: 700; font-size: 0.86rem; color: var(--text); line-height: 1.35; margin-bottom: 5px; }
+    .benefit-desc  { font-size: 0.76rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* ── HOW IT WORKS — frosted warm glass ── */
+    .how {
+      background: var(--glass-warm);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border-top:    1px solid rgba(255,255,255,0.5);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
     }
-    .benefit-desc {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      line-height: 1.55;
+    @supports not (backdrop-filter: blur(1px)) {
+      .how { background: rgba(255,250,242,0.97); }
     }
 
-    /* ─────────────────────────────────────────
-       HOW IT WORKS  —  warm sand pale
-    ───────────────────────────────────────── */
-    .how { background: var(--sand-pale); }
     .steps {
       display: flex;
       flex-direction: column;
@@ -472,62 +522,54 @@
       top: 50px;
       bottom: -22px;
       width: 2px;
-      background: linear-gradient(180deg, rgba(196,169,126,0.45) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(196,169,126,0.4) 0%, transparent 100%);
     }
     .step-num {
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
+      width: 44px; height: 44px; min-width: 44px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--lagoon-deep) 0%, var(--lagoon-mid) 100%);
       color: var(--white);
-      font-weight: 800;
-      font-size: 1.05rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 5px 18px rgba(29,77,104,0.22);
-      position: relative;
-      z-index: 1;
+      font-weight: 800; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 5px 18px rgba(29,77,104,0.25);
+      position: relative; z-index: 1;
     }
-    .step-body {
-      padding-top: 8px;
-      padding-bottom: 46px;
-    }
+    .step-body { padding-top: 8px; padding-bottom: 46px; }
     .step:last-child .step-body { padding-bottom: 0; }
-    .step-title {
-      font-weight: 700;
-      font-size: 1.01rem;
-      color: var(--text);
-      margin-bottom: 7px;
+    .step-title { font-weight: 700; font-size: 1.01rem; color: var(--text); margin-bottom: 7px; }
+    .step-desc  { color: var(--text-mid); font-size: 0.86rem; line-height: 1.68; }
+
+    /* ── TESTIMONIALS — frosted lagoon glass ── */
+    .testimonials {
+      background: var(--glass-lagoon);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border-top:    1px solid rgba(255,255,255,0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.3);
     }
-    .step-desc {
-      color: var(--text-mid);
-      font-size: 0.86rem;
-      line-height: 1.68;
+    @supports not (backdrop-filter: blur(1px)) {
+      .testimonials { background: rgba(232,248,255,0.97); }
     }
 
-    /* ─────────────────────────────────────────
-       TESTIMONIALS  —  lagoon mist
-    ───────────────────────────────────────── */
-    .testimonials { background: var(--lagoon-mist); }
     .testimonials-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
     }
     .t-card {
-      background: var(--white);
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border-radius: var(--radius);
       padding: 26px 22px 22px;
-      box-shadow: 0 4px 22px rgba(29,77,104,0.06);
-      border: 1px solid rgba(74,143,174,0.13);
+      box-shadow: 0 4px 20px rgba(29,77,104,0.08);
+      border: 1px solid rgba(255,255,255,0.8);
       position: relative;
       transition: all 0.3s;
     }
     .t-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 34px rgba(29,77,104,0.1);
+      box-shadow: 0 12px 36px rgba(29,77,104,0.12);
     }
     .quote-icon {
       font-size: 3.4rem;
@@ -536,40 +578,29 @@
       font-family: 'Playfair Display', Georgia, serif;
       font-style: italic;
       position: absolute;
-      top: 16px;
-      right: 18px;
+      top: 16px; right: 18px;
     }
     .t-stars { display: flex; gap: 3px; margin-bottom: 11px; }
     .t-stars svg { width: 15px; height: 15px; fill: var(--sand); }
-    .t-text {
-      color: var(--text-mid);
-      font-size: 0.89rem;
-      line-height: 1.72;
-      font-style: italic;
-      margin-bottom: 17px;
-    }
+    .t-text { color: var(--text-mid); font-size: 0.89rem; line-height: 1.72; font-style: italic; margin-bottom: 17px; }
     .t-author {
       display: flex;
       align-items: center;
       gap: 11px;
-      border-top: 1px solid var(--lagoon-mist);
+      border-top: 1px solid rgba(74,143,174,0.12);
       padding-top: 14px;
     }
     .t-avatar {
-      width: 42px;
-      height: 42px;
+      width: 42px; height: 42px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--lagoon-deep), var(--lagoon-soft));
       color: var(--white);
-      font-weight: 700;
-      font-size: 0.83rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-weight: 700; font-size: 0.83rem;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
     }
-    .t-name { font-weight: 700; font-size: 0.84rem; color: var(--text); }
-    .t-city { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
+    .t-name     { font-weight: 700; font-size: 0.84rem; color: var(--text); }
+    .t-city     { font-size: 0.72rem; color: var(--text-muted); margin-top: 1px; }
     .t-verified {
       display: inline-flex;
       align-items: center;
@@ -580,40 +611,41 @@
       margin-top: 3px;
     }
 
-    /* ─────────────────────────────────────────
-       FINAL CTA  —  soft lagoon gradient
-    ───────────────────────────────────────── */
+    /* ── CTA FINAL — dark frosted glass ── */
     .cta-final {
-      background: linear-gradient(150deg, var(--lagoon-deep) 0%, var(--lagoon-mid) 100%);
+      background: var(--glass-dark);
+      backdrop-filter: var(--blur-lg);
+      -webkit-backdrop-filter: var(--blur-lg);
+      border-top:    1px solid rgba(255,255,255,0.09);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
       text-align: center;
       position: relative;
       overflow: hidden;
     }
+    @supports not (backdrop-filter: blur(1px)) {
+      .cta-final { background: rgba(8,24,42,0.97); }
+    }
     .cta-final::before {
       content: '';
       position: absolute;
-      bottom: -70px;
+      bottom: -80px;
       left: 50%;
       transform: translateX(-50%);
-      width: 520px;
-      height: 260px;
-      background: radial-gradient(ellipse, rgba(196,169,126,0.11) 0%, transparent 70%);
+      width: 560px; height: 280px;
+      background: radial-gradient(ellipse, rgba(196,169,126,0.1) 0%, transparent 70%);
       pointer-events: none;
     }
-    .cta-final .section-label { color: var(--sand-bright); }
-    .cta-final .section-title { color: var(--white); }
-    .cta-final .section-desc { color: rgba(255,255,255,0.62); margin-bottom: 42px; }
     .cta-btns {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      max-width: 430px;
+      max-width: 440px;
       margin: 0 auto;
       position: relative;
       z-index: 1;
     }
     .cta-guarantee {
-      color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.35);
       font-size: 0.73rem;
       margin-top: 20px;
       display: flex;
@@ -622,21 +654,17 @@
       gap: 6px;
     }
 
-    /* ─────────────────────────────────────────
-       DIVIDERS
-    ───────────────────────────────────────── */
-    .soft-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(74,143,174,0.18), transparent);
-    }
-
-    /* ─────────────────────────────────────────
-       FOOTER
-    ───────────────────────────────────────── */
+    /* ── FOOTER — darkest glass ── */
     footer {
-      background: #112C40;
+      background: var(--glass-darker);
+      backdrop-filter: var(--blur-md);
+      -webkit-backdrop-filter: var(--blur-md);
+      border-top: 1px solid rgba(255,255,255,0.06);
       padding: 32px 20px 24px;
       text-align: center;
+    }
+    @supports not (backdrop-filter: blur(1px)) {
+      footer { background: rgba(4,14,26,0.98); }
     }
     .footer-logo-wrap {
       display: inline-flex;
@@ -645,13 +673,10 @@
       margin-bottom: 12px;
     }
     .footer-logo-mark {
-      width: 34px;
-      height: 34px;
+      width: 34px; height: 34px;
       background: linear-gradient(135deg, var(--sand), var(--sand-bright));
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     }
     .footer-logo-mark svg { width: 18px; height: 18px; }
     .footer-brand {
@@ -670,23 +695,14 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
     }
-    .footer-routes {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.75rem;
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-    .footer-copy {
-      color: rgba(255,255,255,0.22);
-      font-size: 0.7rem;
-      line-height: 1.7;
-    }
-    .footer-badge {
+    .footer-routes { color: rgba(255,255,255,0.38); font-size: 0.75rem; margin-bottom: 8px; font-weight: 500; }
+    .footer-copy   { color: rgba(255,255,255,0.2); font-size: 0.7rem; line-height: 1.7; }
+    .footer-badge  {
       display: inline-block;
       margin-top: 10px;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.27);
+      color: rgba(255,255,255,0.25);
       font-size: 0.65rem;
       padding: 4px 12px;
       border-radius: 100px;
@@ -694,42 +710,48 @@
       letter-spacing: 0.05em;
     }
 
-    /* ─────────────────────────────────────────
+    /* ═══════════════════════════════════════════════
+       DIVIDERS — subtle between glass panels
+    ═══════════════════════════════════════════════ */
+    .soft-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    }
+
+    /* ═══════════════════════════════════════════════
        WHATSAPP FLOAT
-    ───────────────────────────────────────── */
+    ═══════════════════════════════════════════════ */
     .wpp-float {
       position: fixed;
-      bottom: 22px;
-      right: 18px;
+      bottom: 22px; right: 18px;
       z-index: 999;
-      width: 58px;
-      height: 58px;
+      width: 58px; height: 58px;
       background: #22C55E;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       text-decoration: none;
-      box-shadow: 0 6px 26px rgba(34,197,94,0.38);
+      box-shadow: 0 6px 26px rgba(34,197,94,0.4);
       animation: wpp-pulse 3s infinite;
       transition: transform 0.25s, box-shadow 0.25s;
     }
     .wpp-float:hover {
       transform: scale(1.1) translateY(-2px);
-      box-shadow: 0 12px 34px rgba(34,197,94,0.52);
+      box-shadow: 0 12px 34px rgba(34,197,94,0.55);
     }
     .wpp-float svg { width: 29px; height: 29px; }
     .wpp-tooltip {
       position: absolute;
-      right: 68px;
-      bottom: 14px;
-      background: var(--lagoon-deep);
+      right: 68px; bottom: 14px;
+      background: rgba(8,24,42,0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       color: var(--white);
       font-size: 0.71rem;
       font-weight: 600;
       padding: 7px 12px;
       border-radius: 8px;
       white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.1);
       pointer-events: none;
       opacity: 0;
       transform: translateX(6px);
@@ -738,40 +760,39 @@
     .wpp-tooltip::after {
       content: '';
       position: absolute;
-      right: -5px;
-      top: 50%;
+      right: -5px; top: 50%;
       transform: translateY(-50%);
       border: 5px solid transparent;
-      border-left-color: var(--lagoon-deep);
+      border-left-color: rgba(8,24,42,0.95);
       border-right: none;
     }
     .wpp-float:hover .wpp-tooltip { opacity: 1; transform: translateX(0); }
 
-    /* ─────────────────────────────────────────
+    /* ═══════════════════════════════════════════════
        ANIMATIONS
-    ───────────────────────────────────────── */
+    ═══════════════════════════════════════════════ */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes wpp-pulse {
-      0%, 100% { box-shadow: 0 6px 26px rgba(34,197,94,0.38), 0 0 0 0 rgba(34,197,94,0.32); }
-      60%      { box-shadow: 0 6px 26px rgba(34,197,94,0.38), 0 0 0 13px rgba(34,197,94,0); }
+      0%, 100% { box-shadow: 0 6px 26px rgba(34,197,94,0.4), 0 0 0 0 rgba(34,197,94,0.32); }
+      60%      { box-shadow: 0 6px 26px rgba(34,197,94,0.4), 0 0 0 13px rgba(34,197,94,0); }
     }
 
-    /* ─────────────────────────────────────────
+    /* ═══════════════════════════════════════════════
        RESPONSIVE
-    ───────────────────────────────────────── */
+    ═══════════════════════════════════════════════ */
     @media (min-width: 560px) {
-      .hero-ctas          { flex-direction: row; max-width: 560px; }
-      .hero-ctas a        { flex: 1; }
-      .benefits-grid      { grid-template-columns: repeat(4, 1fr); gap: 18px; }
-      .testimonials-grid  { grid-template-columns: repeat(3, 1fr); }
-      .cta-btns           { flex-direction: row; max-width: 520px; }
-      .cta-btns a         { flex: 1; }
+      .hero-ctas         { flex-direction: row; max-width: 560px; }
+      .hero-ctas a       { flex: 1; }
+      .benefits-grid     { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+      .testimonials-grid { grid-template-columns: repeat(3, 1fr); }
+      .cta-btns          { flex-direction: row; max-width: 520px; }
+      .cta-btns a        { flex: 1; }
     }
     @media (min-width: 768px) {
-      .hero         { padding: 88px 40px 104px; }
+      .hero          { padding: 100px 40px 120px; }
       .section-inner { padding: 88px 40px; }
     }
   </style>
@@ -782,11 +803,11 @@
 <div class="topbar">
   <span class="topbar-text" data-i18n="topbar">🔒 Serviço 100% Privativo · <strong>Recepção com Plaquinha no Aeroporto</strong> · Atendimento 24h</span>
   <div class="lang-switcher" role="group" aria-label="Idioma">
-    <button class="lang-btn active" data-lang="PT" aria-label="Português">PT</button>
+    <button class="lang-btn active" data-lang="PT">PT</button>
     <span class="lang-sep" aria-hidden="true">|</span>
-    <button class="lang-btn" data-lang="EN" aria-label="English">EN</button>
+    <button class="lang-btn" data-lang="EN">EN</button>
     <span class="lang-sep" aria-hidden="true">|</span>
-    <button class="lang-btn" data-lang="ES" aria-label="Español">ES</button>
+    <button class="lang-btn" data-lang="ES">ES</button>
   </div>
 </div>
 
@@ -807,8 +828,8 @@
   </a>
 </nav>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
+<!-- ══ HERO — photo shows fully, dark overlay for contrast ══ -->
+<section class="hero" aria-label="Apresentação">
   <div class="hero-inner">
     <div class="hero-badge" data-i18n="hero-badge">⭐ Avaliação 4.9 · +2.000 Viagens Realizadas</div>
     <h1 data-i18n="hero-h1">Seu Transfer <em>Privativo e Seguro</em><br>de São Luís para os<br>Lençóis Maranhenses.</h1>
@@ -829,15 +850,10 @@
       <div class="trust-pill"><span class="chk">✓</span><span data-i18n="trust3">Cancelamento gratuito</span></div>
     </div>
   </div>
-  <div class="hero-wave" aria-hidden="true">
-    <svg viewBox="0 0 1440 64" preserveAspectRatio="none"><path d="M0,42 C240,70 480,14 720,42 C960,70 1200,14 1440,42 L1440,64 L0,64 Z" fill="#FAFAF8"/></svg>
-  </div>
 </section>
 
-<div class="soft-divider"></div>
-
-<!-- ══ BENEFITS ══ -->
-<section class="benefits">
+<!-- ══ BENEFITS — frosted white glass ══ -->
+<section class="benefits" aria-label="Diferenciais">
   <div class="section-inner">
     <p class="section-label" data-i18n="ben-label">Por que nos escolher</p>
     <h2 class="section-title" data-i18n="ben-title">Conforto e Segurança<br>do Início ao Fim</h2>
@@ -847,31 +863,31 @@
       <div class="benefit-card">
         <div class="benefit-icon-wrap">❄️</div>
         <div class="benefit-title" data-i18n="b1t">Veículos Climatizados</div>
-        <div class="benefit-desc" data-i18n="b1d">Frota nova com ar-condicionado potente para o calor do Maranhão</div>
+        <div class="benefit-desc"  data-i18n="b1d">Frota nova com ar-condicionado potente para o calor do Maranhão</div>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon-wrap">🛡️</div>
         <div class="benefit-title" data-i18n="b2t">Seguro Viagem Incluso</div>
-        <div class="benefit-desc" data-i18n="b2d">Todos os passageiros cobertos sem nenhum custo adicional</div>
+        <div class="benefit-desc"  data-i18n="b2d">Todos os passageiros cobertos sem nenhum custo adicional</div>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon-wrap">🪧</div>
         <div class="benefit-title" data-i18n="b3t">Recepção no Aeroporto</div>
-        <div class="benefit-desc" data-i18n="b3d">Motorista aguarda com plaquinha personalizada com seu nome</div>
+        <div class="benefit-desc"  data-i18n="b3d">Motorista aguarda com plaquinha personalizada com seu nome</div>
       </div>
       <div class="benefit-card">
         <div class="benefit-icon-wrap">🕐</div>
         <div class="benefit-title" data-i18n="b4t">Atendimento 24h</div>
-        <div class="benefit-desc" data-i18n="b4d">Suporte a qualquer hora para voos noturnos ou alterações de rota</div>
+        <div class="benefit-desc"  data-i18n="b4d">Suporte a qualquer hora para voos noturnos ou alterações de rota</div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="soft-divider"></div>
+<div class="soft-divider" aria-hidden="true"></div>
 
-<!-- ══ HOW IT WORKS ══ -->
-<section class="how">
+<!-- ══ HOW IT WORKS — frosted warm glass ══ -->
+<section class="how" aria-label="Como funciona">
   <div class="section-inner">
     <p class="section-label" data-i18n="how-label">Como Funciona</p>
     <h2 class="section-title" data-i18n="how-title">Simples, Rápido<br>e Sem Stress</h2>
@@ -882,31 +898,31 @@
         <div class="step-num">1</div>
         <div class="step-body">
           <div class="step-title" data-i18n="s1t">Reserva Rápida via WhatsApp</div>
-          <div class="step-desc" data-i18n="s1d">Clique em um dos botões de cotação, informe a data, o horário do voo e a quantidade de passageiros. Confirmação e link de pagamento em minutos.</div>
+          <div class="step-desc"  data-i18n="s1d">Clique em um dos botões de cotação, informe a data, o horário do voo e a quantidade de passageiros. Confirmação e link de pagamento em minutos.</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-body">
           <div class="step-title" data-i18n="s2t">Recepção no Desembarque</div>
-          <div class="step-desc" data-i18n="s2d">Seu motorista estará no saguão de chegada com plaquinha no seu nome, pontualmente na hora combinada — inclusive para voos atrasados.</div>
+          <div class="step-desc"  data-i18n="s2d">Seu motorista estará no saguão de chegada com plaquinha no seu nome, pontualmente na hora combinada — inclusive para voos atrasados.</div>
         </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <div class="step-body">
           <div class="step-title" data-i18n="s3t">Viagem Confortável até o Destino</div>
-          <div class="step-desc" data-i18n="s3d">Relaxe no veículo climatizado enquanto nosso motorista experiente cuida de tudo. Você chega descansado para aproveitar cada momento.</div>
+          <div class="step-desc"  data-i18n="s3d">Relaxe no veículo climatizado enquanto nosso motorista experiente cuida de tudo. Você chega descansado para aproveitar cada momento.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="soft-divider"></div>
+<div class="soft-divider" aria-hidden="true"></div>
 
-<!-- ══ TESTIMONIALS ══ -->
-<section class="testimonials">
+<!-- ══ TESTIMONIALS — frosted lagoon glass ══ -->
+<section class="testimonials" aria-label="Depoimentos">
   <div class="section-inner">
     <p class="section-label" data-i18n="tes-label">O Que Dizem Nossos Clientes</p>
     <h2 class="section-title" data-i18n="tes-title">Quem Viajou, Aprovou</h2>
@@ -916,69 +932,42 @@
 
       <article class="t-card">
         <div class="quote-icon" aria-hidden="true">"</div>
-        <div class="t-stars" aria-label="5 estrelas">
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
+        <div class="t-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
         <p class="t-text" data-i18n="t1tx">"O motorista estava lá na hora exata, com plaquinha e tudo. Quase 4 horas em total conforto, ar gelado e paradas tranquilas. Chegamos em Barreirinhas sem nenhum cansaço. Serviço impecável!"</p>
         <div class="t-author">
           <div class="t-avatar">RF</div>
           <div>
             <div class="t-name">Rafael Ferreira</div>
             <div class="t-city">São Paulo, SP</div>
-            <div class="t-verified">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span data-i18n="verified">Viagem verificada</span>
-            </div>
+            <div class="t-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span data-i18n="verified">Viagem verificada</span></div>
           </div>
         </div>
       </article>
 
       <article class="t-card">
         <div class="quote-icon" aria-hidden="true">"</div>
-        <div class="t-stars" aria-label="5 estrelas">
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
-        <p class="t-text" data-i18n="t2tx">"Contratei para um grupo de 6 pessoas. Carro espaçoso, motorista super educado e a estrada foi muito tranquila. Me senti completamente segura do início ao fim. Recomendo de olhos fechados para qualquer turista!"</p>
+        <div class="t-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="t-text" data-i18n="t2tx">"Contratei para um grupo de 6 pessoas. Carro espaçoso, motorista super educado e a estrada foi muito tranquila. Me senti completamente segura do início ao fim. Recomendo de olhos fechados!"</p>
         <div class="t-author">
           <div class="t-avatar">CL</div>
           <div>
             <div class="t-name">Camila Lopes</div>
             <div class="t-city">Belo Horizonte, MG</div>
-            <div class="t-verified">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span data-i18n="verified">Viagem verificada</span>
-            </div>
+            <div class="t-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span data-i18n="verified">Viagem verificada</span></div>
           </div>
         </div>
       </article>
 
       <article class="t-card">
         <div class="quote-icon" aria-hidden="true">"</div>
-        <div class="t-stars" aria-label="5 estrelas">
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-        </div>
+        <div class="t-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
         <p class="t-text" data-i18n="t3tx">"Nosso voo atrasou mais de uma hora e o motorista esperou sem reclamar nada. Isso é profissionalismo de verdade! O ar estava gelado e chegamos a Santo Amaro certinho. Voltarei com toda a certeza."</p>
         <div class="t-author">
           <div class="t-avatar">BM</div>
           <div>
             <div class="t-name">Bruno Mendes</div>
             <div class="t-city">Rio de Janeiro, RJ</div>
-            <div class="t-verified">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span data-i18n="verified">Viagem verificada</span>
-            </div>
+            <div class="t-verified"><svg width="11" height="11" viewBox="0 0 24 24" fill="#15803D"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span data-i18n="verified">Viagem verificada</span></div>
           </div>
         </div>
       </article>
@@ -987,17 +976,17 @@
   </div>
 </section>
 
-<div class="soft-divider"></div>
+<div class="soft-divider" aria-hidden="true"></div>
 
-<!-- ══ FINAL CTA ══ -->
-<section class="cta-final">
+<!-- ══ FINAL CTA — dark glass ══ -->
+<section class="cta-final" aria-label="Chamada para ação">
   <div class="section-inner">
-    <p class="section-label" data-i18n="cta-label">Reserve Agora</p>
-    <h2 class="section-title" data-i18n="cta-title">Pronto para Conhecer os<br>Lençóis Maranhenses?</h2>
-    <p class="section-desc" data-i18n="cta-desc">Atendemos grupos, famílias e viajantes solo. Reserve agora e garanta pontualidade e conforto na sua chegada.</p>
+    <p class="section-label label-light" data-i18n="cta-label">Reserve Agora</p>
+    <h2 class="section-title title-light" data-i18n="cta-title">Pronto para Conhecer os<br>Lençóis Maranhenses?</h2>
+    <p class="section-desc desc-light" data-i18n="cta-desc">Atendemos grupos, famílias e viajantes solo. Reserve agora e garanta pontualidade e conforto na sua chegada.</p>
     <div class="cta-btns">
-      <a href="#" class="btn-sand"><span data-i18n="btn-barr-cta">🏜️ Ir para Barreirinhas</span></a>
-      <a href="#" class="btn-glass"><span data-i18n="btn-santo-cta">🌊 Ir para Santo Amaro</span></a>
+      <a href="#" class="btn-sand-solid"><span data-i18n="btn-barr-cta">🏜️ Ir para Barreirinhas</span></a>
+      <a href="#" class="btn-outline-white"><span data-i18n="btn-santo-cta">🌊 Ir para Santo Amaro</span></a>
     </div>
     <p class="cta-guarantee">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1006,8 +995,8 @@
   </div>
 </section>
 
-<!-- ══ FOOTER ══ -->
-<footer>
+<!-- ══ FOOTER — darkest glass ══ -->
+<footer role="contentinfo">
   <div class="footer-logo-wrap">
     <div class="footer-logo-mark">
       <svg viewBox="0 0 22 22" fill="none"><path d="M3 13h16M4.5 17h13M5.5 9.5l2-5h7l2 5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="13" width="16" height="4" rx="1.2" stroke="white" stroke-width="1.7"/><circle cx="7" cy="17" r="1.8" stroke="white" stroke-width="1.5"/><circle cx="15" cy="17" r="1.8" stroke="white" stroke-width="1.5"/></svg>
@@ -1032,10 +1021,7 @@
 <script>
 (function () {
   'use strict';
-
-  /* ── Translation Dictionary ── */
   var T = {
-
     PT: {
       'topbar'       : '🔒 Serviço 100% Privativo · <strong>Recepção com Plaquinha no Aeroporto</strong> · Atendimento 24h',
       'logo-sub'     : 'São Luís · Lençóis Maranhenses',
@@ -1051,23 +1037,19 @@
       'ben-label'    : 'Por que nos escolher',
       'ben-title'    : 'Conforto e Segurança<br>do Início ao Fim',
       'ben-desc'     : 'Cada detalhe da sua viagem foi pensado para que você chegue descansado e aproveite cada momento nas dunas.',
-      'b1t' : 'Veículos Climatizados',
-      'b1d' : 'Frota nova com ar-condicionado potente para o calor do Maranhão',
-      'b2t' : 'Seguro Viagem Incluso',
-      'b2d' : 'Todos os passageiros cobertos sem nenhum custo adicional',
-      'b3t' : 'Recepção no Aeroporto',
-      'b3d' : 'Motorista aguarda com plaquinha personalizada com seu nome',
-      'b4t' : 'Atendimento 24h',
-      'b4d' : 'Suporte a qualquer hora para voos noturnos ou alterações de rota',
+      'b1t':'Veículos Climatizados',     'b1d':'Frota nova com ar-condicionado potente para o calor do Maranhão',
+      'b2t':'Seguro Viagem Incluso',     'b2d':'Todos os passageiros cobertos sem nenhum custo adicional',
+      'b3t':'Recepção no Aeroporto',     'b3d':'Motorista aguarda com plaquinha personalizada com seu nome',
+      'b4t':'Atendimento 24h',           'b4d':'Suporte a qualquer hora para voos noturnos ou alterações de rota',
       'how-label'    : 'Como Funciona',
       'how-title'    : 'Simples, Rápido<br>e Sem Stress',
       'how-desc'     : 'Reservar seu transfer é tão fácil quanto mandar uma mensagem. Menos de 2 minutos para garantir sua vaga.',
-      's1t': 'Reserva Rápida via WhatsApp',
-      's1d': 'Clique em um dos botões de cotação, informe a data, o horário do voo e a quantidade de passageiros. Confirmação e link de pagamento em minutos.',
-      's2t': 'Recepção no Desembarque',
-      's2d': 'Seu motorista estará no saguão de chegada com plaquinha no seu nome, pontualmente na hora combinada — inclusive para voos atrasados.',
-      's3t': 'Viagem Confortável até o Destino',
-      's3d': 'Relaxe no veículo climatizado enquanto nosso motorista experiente cuida de tudo. Você chega descansado para aproveitar cada momento.',
+      's1t':'Reserva Rápida via WhatsApp',
+      's1d':'Clique em um dos botões de cotação, informe a data, o horário do voo e a quantidade de passageiros. Confirmação e link de pagamento em minutos.',
+      's2t':'Recepção no Desembarque',
+      's2d':'Seu motorista estará no saguão de chegada com plaquinha no seu nome, pontualmente na hora combinada — inclusive para voos atrasados.',
+      's3t':'Viagem Confortável até o Destino',
+      's3d':'Relaxe no veículo climatizado enquanto nosso motorista experiente cuida de tudo. Você chega descansado para aproveitar cada momento.',
       'tes-label'    : 'O Que Dizem Nossos Clientes',
       'tes-title'    : 'Quem Viajou, Aprovou',
       'tes-desc'     : 'Mais de 2.000 turistas já chegaram com segurança e conforto aos Lençóis Maranhenses com a gente.',
@@ -1085,14 +1067,13 @@
       'ftr-antt'     : 'Transporte Privativo · Regularizado ANTT',
       'wpp-tip'      : 'Fale conosco agora!'
     },
-
     EN: {
       'topbar'       : '🔒 100% Private Service · <strong>Airport Pick-up with Name Sign</strong> · 24h Support',
       'logo-sub'     : 'São Luís · Lençóis Maranhenses',
       'nav-cta'      : 'Get a Quote',
       'hero-badge'   : '⭐ 4.9 Rating · +2,000 Trips Completed',
       'hero-h1'      : 'Your <em>Private &amp; Safe</em> Transfer<br>from São Luís to the<br>Lençóis Maranhenses.',
-      'hero-sub'     : 'New vehicles, experienced drivers and British punctuality from the very moment you land.',
+      'hero-sub'     : 'New vehicles, experienced drivers and British punctuality from the moment you land.',
       'btn-barr-hero': 'Quote for Barreirinhas',
       'btn-santo-hero': 'Quote for Santo Amaro',
       'trust1'       : 'No flight delay fees',
@@ -1101,23 +1082,19 @@
       'ben-label'    : 'Why Choose Us',
       'ben-title'    : 'Comfort &amp; Safety<br>From Start to Finish',
       'ben-desc'     : 'Every detail of your journey was designed so you arrive rested and ready to enjoy every moment in the dunes.',
-      'b1t' : 'Air-Conditioned Vehicles',
-      'b1d' : 'New fleet with powerful AC to handle the Maranhão heat',
-      'b2t' : 'Travel Insurance Included',
-      'b2d' : 'All passengers covered at no extra cost',
-      'b3t' : 'Airport Reception',
-      'b3d' : 'Driver waits with a personalized sign bearing your name',
-      'b4t' : '24h Support',
-      'b4d' : 'Help at any hour for night flights or route changes',
+      'b1t':'Air-Conditioned Vehicles',  'b1d':'New fleet with powerful AC to handle the Maranhão heat',
+      'b2t':'Travel Insurance Included', 'b2d':'All passengers covered at no extra cost',
+      'b3t':'Airport Reception',         'b3d':'Driver waits with a personalized sign bearing your name',
+      'b4t':'24h Support',               'b4d':'Help at any hour for night flights or route changes',
       'how-label'    : 'How It Works',
       'how-title'    : 'Simple, Fast<br>and Stress-Free',
       'how-desc'     : 'Booking your transfer is as easy as sending a message. Under 2 minutes to lock in your spot.',
-      's1t': 'Quick Booking via WhatsApp',
-      's1d': 'Click one of the quote buttons, share your date, flight time and number of passengers. Confirmation and payment link arrive in minutes.',
-      's2t': 'Airport Pick-up',
-      's2d': 'Your driver will be in the arrivals hall with a sign bearing your name, right on time — including for delayed flights.',
-      's3t': 'Comfortable Ride to Your Destination',
-      's3d': 'Relax in your air-conditioned vehicle while our experienced driver handles everything. You arrive fresh and ready to explore.',
+      's1t':'Quick Booking via WhatsApp',
+      's1d':'Click one of the quote buttons, share your date, flight time and number of passengers. Confirmation and payment link arrive in minutes.',
+      's2t':'Airport Pick-up',
+      's2d':'Your driver will be in the arrivals hall with a sign bearing your name, right on time — including for delayed flights.',
+      's3t':'Comfortable Ride to Your Destination',
+      's3d':'Relax in your air-conditioned vehicle while our experienced driver handles everything. You arrive fresh and ready to explore.',
       'tes-label'    : 'What Our Guests Say',
       'tes-title'    : 'Every Traveler Loved It',
       'tes-desc'     : 'Over 2,000 travelers have arrived safely and comfortably to the Lençóis Maranhenses with us.',
@@ -1135,7 +1112,6 @@
       'ftr-antt'     : 'Private Transport · ANTT Certified',
       'wpp-tip'      : 'Chat with us now!'
     },
-
     ES: {
       'topbar'       : '🔒 Servicio 100% Privado · <strong>Recepción en Aeropuerto con Letrero</strong> · Atención 24h',
       'logo-sub'     : 'São Luís · Lençóis Maranhenses',
@@ -1151,29 +1127,25 @@
       'ben-label'    : 'Por Qué Elegirnos',
       'ben-title'    : 'Comodidad y Seguridad<br>de Principio a Fin',
       'ben-desc'     : 'Cada detalle de su viaje fue diseñado para que llegue descansado y disfrute cada momento en las dunas.',
-      'b1t' : 'Vehículos Climatizados',
-      'b1d' : 'Flota nueva con aire acondicionado potente para el calor de Maranhão',
-      'b2t' : 'Seguro de Viaje Incluido',
-      'b2d' : 'Todos los pasajeros cubiertos sin costo adicional',
-      'b3t' : 'Recepción en Aeropuerto',
-      'b3d' : 'El conductor espera con letrero personalizado con su nombre',
-      'b4t' : 'Atención 24h',
-      'b4d' : 'Soporte a cualquier hora para vuelos nocturnos o cambios de ruta',
+      'b1t':'Vehículos Climatizados',    'b1d':'Flota nueva con aire acondicionado potente para el calor de Maranhão',
+      'b2t':'Seguro de Viaje Incluido',  'b2d':'Todos los pasajeros cubiertos sin costo adicional',
+      'b3t':'Recepción en Aeropuerto',   'b3d':'El conductor espera con letrero personalizado con su nombre',
+      'b4t':'Atención 24h',              'b4d':'Soporte a cualquier hora para vuelos nocturnos o cambios de ruta',
       'how-label'    : 'Cómo Funciona',
       'how-title'    : 'Simple, Rápido<br>y Sin Estrés',
       'how-desc'     : 'Reservar su transfer es tan fácil como enviar un mensaje. Menos de 2 minutos para garantizar su lugar.',
-      's1t': 'Reserva Rápida por WhatsApp',
-      's1d': 'Haga clic en uno de los botones de cotización, indique la fecha, horario del vuelo y la cantidad de pasajeros. Confirmación y link de pago en minutos.',
-      's2t': 'Recepción en el Aeropuerto',
-      's2d': 'Su conductor estará en la sala de llegadas con un letrero con su nombre, puntualmente a la hora acordada — incluso para vuelos con retraso.',
-      's3t': 'Viaje Cómodo hasta el Destino',
-      's3d': 'Relájese en el vehículo climatizado mientras nuestro conductor experimentado se encarga de todo. Llegará fresco y listo para explorar.',
+      's1t':'Reserva Rápida por WhatsApp',
+      's1d':'Haga clic en uno de los botones de cotización, indique la fecha, horario del vuelo y la cantidad de pasajeros. Confirmación y link de pago en minutos.',
+      's2t':'Recepción en el Aeropuerto',
+      's2d':'Su conductor estará en la sala de llegadas con un letrero con su nombre, puntualmente a la hora acordada — incluso para vuelos con retraso.',
+      's3t':'Viaje Cómodo hasta el Destino',
+      's3d':'Relájese en el vehículo climatizado mientras nuestro conductor experimentado se encarga de todo. Llegará fresco y listo para explorar.',
       'tes-label'    : 'Lo Que Dicen Nuestros Clientes',
       'tes-title'    : 'Quienes Viajaron, Aprobaron',
       'tes-desc'     : 'Más de 2.000 turistas ya llegaron seguros y cómodos a los Lençóis Maranhenses con nosotros.',
       't1tx': '"El conductor llegó puntual, con letrero y todo. Casi 4 horas de total comodidad, aire helado y paradas tranquilas. Llegamos a Barreirinhas sin ningún cansancio. ¡Servicio impecable, nota 10!"',
       't2tx': '"Lo contraté para un grupo de 6 personas. Auto espacioso, conductor muy amable y carretera muy tranquila. Me sentí completamente segura de principio a fin. ¡Lo recomiendo con los ojos cerrados!"',
-      't3tx': '"Nuestro vuelo se retrasó más de una hora y el conductor esperó sin quejarse en absoluto. ¡Eso es profesionalismo de verdad! El aire estaba helado y llegamos a Santo Amaro como estaba planeado. Sin duda volveré."',
+      't3tx': '"Nuestro vuelo se retrasó más de una hora y el conductor esperó sin quejarse en absoluto. ¡Eso es profesionalismo de verdad! El aire estaba helado y llegamos a Santo Amaro como planeado. Sin duda volveré."',
       'verified'     : 'Viaje verificado',
       'cta-label'    : 'Reserve Ahora',
       'cta-title'    : '¿Listo para Conocer los<br>Lençóis Maranhenses?',
@@ -1189,38 +1161,31 @@
 
   var htmlLang = { PT: 'pt-BR', EN: 'en', ES: 'es' };
 
-  /* ── Apply language ── */
   function setLang(lang) {
     if (!T[lang]) return;
-    var dict = T[lang];
-    document.querySelectorAll('[data-i18n]').forEach(function (el) {
-      var key = el.getAttribute('data-i18n');
-      if (dict[key] !== undefined) el.innerHTML = dict[key];
+    var d = T[lang];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var k = el.getAttribute('data-i18n');
+      if (d[k] !== undefined) el.innerHTML = d[k];
     });
-    document.querySelectorAll('.lang-btn').forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.lang === lang);
     });
     document.documentElement.lang = htmlLang[lang] || 'pt-BR';
-    try { localStorage.setItem('tlm-lang', lang); } catch (e) {}
+    try { localStorage.setItem('tlm-lang', lang); } catch(e) {}
   }
 
-  /* ── Bootstrap ── */
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.lang-btn').forEach(function (btn) {
-      btn.addEventListener('click', function () { setLang(btn.dataset.lang); });
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.addEventListener('click', function() { setLang(b.dataset.lang); });
     });
     var saved = 'PT';
-    try { saved = localStorage.getItem('tlm-lang') || 'PT'; } catch (e) {}
+    try { saved = localStorage.getItem('tlm-lang') || 'PT'; } catch(e) {}
     if (!T[saved]) saved = 'PT';
-    /* PT is already rendered in HTML — only switch active button if PT,
-       otherwise do a full language swap */
-    if (saved !== 'PT') {
-      setLang(saved);
-    } else {
-      document.querySelectorAll('.lang-btn').forEach(function (btn) {
-        btn.classList.toggle('active', btn.dataset.lang === 'PT');
-      });
-    }
+    if (saved !== 'PT') setLang(saved);
+    else document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.lang === 'PT');
+    });
   });
 }());
 </script>
