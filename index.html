@@ -172,32 +172,54 @@
     .nav-cta:hover { background: var(--sand-bright); }
 
     /* ─────────────────────────────────────────
-       HERO — soft lagoon gradient
+       HERO — parallax photo + overlay
     ───────────────────────────────────────── */
     .hero {
       position: relative;
       overflow: hidden;
       padding: 60px 20px 86px;
       text-align: center;
-      background: linear-gradient(158deg, #1A4862 0%, #225E7F 45%, #2A7097 100%);
+      /* Colour shown while the image loads */
+      background-color: #1A4862;
+      /* Parallax photo background */
+      background-image: url('https://raw.githubusercontent.com/fabiusilva/site-transfer/main/3840px-Parque_Nacional_dos_Len%C3%A7%C3%B3is_Maranhenses_photo_04.jpg');
+      background-attachment: fixed;   /* parallax */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
     }
+    /* iOS / Android don't support background-attachment:fixed — graceful fallback */
+    @media (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1) {
+      .hero { background-attachment: scroll; }
+    }
+    /* Dark gradient overlay — guarantees white text contrast over any photo */
     .hero::before {
       content: '';
       position: absolute;
       inset: 0;
+      z-index: 1;
       background:
-        radial-gradient(ellipse 80% 55% at 50% 115%, rgba(196,169,126,0.18) 0%, transparent 65%),
-        radial-gradient(ellipse 55% 35% at 5% 0%, rgba(29,77,104,0.55) 0%, transparent 50%);
+        /* warm sand glow rising from the dunes at the bottom */
+        radial-gradient(ellipse 90% 45% at 50% 115%, rgba(180,140,80,0.22) 0%, transparent 60%),
+        /* primary dark veil — strong enough for WCAG AA contrast */
+        linear-gradient(
+          168deg,
+          rgba(10, 28, 46, 0.88) 0%,
+          rgba(15, 40, 62, 0.76) 40%,
+          rgba(10, 30, 52, 0.86) 100%
+        );
       pointer-events: none;
     }
+    /* Edge vignette — deeper corners give a cinematic, immersive feel */
     .hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 52px 52px;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse 130% 120% at 50% 50%,
+          transparent 45%,
+          rgba(5, 18, 32, 0.55) 100%);
       pointer-events: none;
     }
     .hero-wave {
@@ -207,12 +229,13 @@
       overflow: hidden;
       line-height: 0;
       pointer-events: none;
+      z-index: 2; /* above both overlay pseudo-elements */
     }
     .hero-wave svg { display: block; width: 100%; }
 
     .hero-inner {
       position: relative;
-      z-index: 2;
+      z-index: 3; /* above overlay (::before z-1) and vignette (::after z-1) */
       max-width: 680px;
       margin: 0 auto;
     }
